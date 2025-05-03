@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Send Email</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(to right, #4b6cb7, #182848);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      background: #fff;
+      color: #333;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 1s ease;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #4b6cb7;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+    }
+
+    input[type="email"],
+    input[type="text"],
+    input[type="file"],
+    textarea {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      margin-top: 5px;
+      width: 100%;
+      transition: border-color 0.3s ease;
+    }
+
+    input[type="email"]:focus,
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4b6cb7;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    input[type="submit"],
+    input[type="reset"] {
+      background-color: #4b6cb7;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    input[type="submit"]:hover,
+    input[type="reset"]:hover {
+      background-color: #3a5199;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .buttons {
+        flex-direction: column;
+      }
+
+      .buttons input {
+        margin-bottom: 10px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Send an Email</h1>
+    <form action="http://localhost:8080/api/v1/email/send" method="post" enctype="multipart/form-data">
+      <label for="email">Recipient Email</label>
+      <input type="email" id="email" name="to" required>
+
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject" required>
+
+      <label for="body">Message Body</label>
+      <textarea id="body" name="body" rows="5" required></textarea>
+
+      <label for="attachment">Attachment (optional)</label>
+      <input type="file" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .pdf, .doc, .docx"> <br><br>
+
+      <div class="buttons">
+        <input type="submit" value="Send Email">
+        <input type="reset" value="Reset">
+      </div>
+    </form>
+    <p id="message" style="text-align:center; color:green;"></p>
+
+<script>
+  const form = document.querySelector("form");
+  const message = document.getElementById("message");
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.text();
+
+      if (response.ok) {
+        message.innerText = result;
+        form.reset();
+      } else {
+        message.innerText = "Failed to send email: " + result;
+        message.style.color = "red";
+      }
+    } catch (error) {
+      console.error("Error occurred while sending email:", error);
+      message.innerText = "An error occurred.";
+      message.style.color = "red";
+    }
+  });
+</script>
+  </div>
+</body>
+</html>
