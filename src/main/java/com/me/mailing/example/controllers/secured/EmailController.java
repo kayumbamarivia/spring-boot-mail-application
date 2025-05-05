@@ -1,9 +1,10 @@
-package com.me.mailing.example.controllers;
+package com.me.mailing.example.controllers.secured;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,7 +15,8 @@ import com.me.mailing.example.dtos.EmailRequest;
 import com.me.mailing.example.services.MailService;
 
 @RestController
-@RequestMapping("/api/v1/email")
+// @RequestMapping("/api/v1/email")
+@RequestMapping("secured")
 public class EmailController {
 
     private final MailService mailService;
@@ -40,6 +42,11 @@ public class EmailController {
             logger.error("Error sending email: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send email");
         }
+    }
+
+    @GetMapping("/sec")
+    public int num() {
+        return 1;
     }
 
 }
